@@ -23,17 +23,17 @@ def filter_users_by_name(users: list[dict[str, Any]], name: str) -> list[dict[st
     ]
 
 
-def filter_users_by_age(users: list[dict[str, Any]], age: int) -> list[dict[str, Any]]:
-    """Filters users by exact age."""
-    return [user for user in users if user.get("age") == age]
-
-
 def filter_users_by_email(users: list[dict[str, Any]], email: str) -> list[dict[str, Any]]:
     """Filters users by email address (case-insensitive)."""
     return [
         user for user in users
         if user.get("email", "").lower() == email.lower()
     ]
+
+
+def filter_users_by_age(users: list[dict[str, Any]], age: int) -> list[dict[str, Any]]:
+    """Filters users by exact age."""
+    return [user for user in users if user.get("age") == age]
 
 
 def display_users(users: list[dict[str, Any]]) -> None:
@@ -53,12 +53,17 @@ def main() -> None:
         return
 
     filter_option = input(
-        "What would you like to filter by? (name, age, email): "
+        "What would you like to filter by? (name, email, age): "
     ).strip().lower()
 
     if filter_option == "name":
         name_to_search = input("Enter a name to filter users: ").strip()
         results = filter_users_by_name(users, name_to_search)
+        display_users(results)
+
+    elif filter_option == "email":
+        email_to_search = input("Enter an email to filter users: ").strip()
+        results = filter_users_by_email(users, email_to_search)
         display_users(results)
 
     elif filter_option == "age":
@@ -67,15 +72,13 @@ def main() -> None:
             results = filter_users_by_age(users, age_to_search)
             display_users(results)
         except ValueError:
-            print("Invalid input. Please enter a valid number for age.")
-
-    elif filter_option == "email":
-        email_to_search = input("Enter an email to filter users: ").strip()
-        results = filter_users_by_email(users, email_to_search)
-        display_users(results)
+            print("Invalid input: Age must be a whole number (e.g., 25).")
 
     else:
-        print("Filtering by that option is not supported.")
+        print(
+            f"Unsupported filter option: '{filter_option}'. "
+            "Please choose from 'name', 'email', or 'age'."
+        )
 
 
 if __name__ == "__main__":
